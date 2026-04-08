@@ -19,7 +19,7 @@ se_litellm_cursor() {
   local DB="$HOME/Library/Application Support/Cursor/User/globalStorage/state.vscdb"
   local JSON_KEY="src.vs.platform.reactivestorage.browser.reactiveStorageServiceImpl.persistentStorage.applicationUser"
   local LITTELM_KEY="..."
-  local LITELLM_DIR="/Users/ehsanullah/vibecode/litellm"
+  local LITELLM_DIR="$HOME/vibecode/litellm"
 
   pkill -x Cursor || true
   sleep 1
@@ -82,7 +82,7 @@ use_litellm_claude() {
   fi
 
   local LITELLM_KEY="..."
-  local LITELLM_DIR="/Users/ehsanullah/vibecode/litellm"
+  local LITELLM_DIR="$HOME/vibecode/litellm"
 
   local LITTELM_URL=""
   local attempt=0
