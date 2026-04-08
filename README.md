@@ -1,4 +1,8 @@
 
+## LiteLLM Setup
+
+Using this LiteLLM setup as a Unified LLM connection for vibecode harness (e.g Claude Code and Cursor) 
+
 ## Helper Extensions
 
 Hunkwise : https://github.com/molon/hunkwise
