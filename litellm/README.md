@@ -15,7 +15,7 @@ docker compose logs cloudflared | grep -o 'https://.*\.trycloudflare\.com'
 I use the following functions in my bashrc
 
 ```
-se_litellm_cursor() {
+use_litellm_cursor() {
   local DB="$HOME/Library/Application Support/Cursor/User/globalStorage/state.vscdb"
   local JSON_KEY="src.vs.platform.reactivestorage.browser.reactiveStorageServiceImpl.persistentStorage.applicationUser"
   local LITTELM_KEY="..."
