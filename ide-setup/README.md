@@ -1,4 +1,10 @@
 
+## Setup Cursor on Ubuntu
+
+For setting up Cursor on Ubuntu, use this repository:
+
+https://github.com/hieutt192/Cursor-ubuntu/tree/main
+
 ## Keybindings / Keyboard Shortcuts (JSON)
 
 ```
