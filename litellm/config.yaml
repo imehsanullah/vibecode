@@ -279,6 +279,83 @@ model_list:
       api_key: os.environ/CLIPROXYAPI_API_KEY
 
 
+# ── GITHUB COPILOT (Student plan + docs parity) ───────────────
+
+  ## Onlt gpt 4 and 4o work sofar
+  # --- OpenAI (chat) ---
+  - model_name: copilot-shim-resp-gpt-4.1
+    litellm_params:
+      model: github_copilot/gpt-4.1
+
+  - model_name: copilot-shim-resp-gpt-5.2
+    litellm_params:
+      model: github_copilot/gpt-5.2
+
+  - model_name: copilot-gpt4o
+    litellm_params:
+      model: github_copilot/gpt-4o
+
+  - model_name: copilot-gpt4
+    litellm_params:
+      model: github_copilot/gpt-4
+
+
+  # --- OpenAI (Codex) ---
+
+  - model_name: copilot-shim-resp-gpt-5.2-codex
+    litellm_params:
+      model: github_copilot/gpt-5.2-codex
+
+  - model_name: copilot-shim-resp-gpt-5.3-codex
+    litellm_params:
+      model: github_copilot/gpt-5.3-codex
+
+  # --- Anthropic (chat) ---
+  - model_name: copilot-claude-haiku-4.5
+    litellm_params:
+      model: github_copilot/claude-haiku-4.5
+
+  - model_name: copilot-claude-sonnet-4
+    litellm_params:
+      model: github_copilot/claude-sonnet-4
+
+  - model_name: copilot-claude-sonnet-4.5
+    litellm_params:
+      model: github_copilot/claude-sonnet-4.5
+
+  # --- Google (chat) ---
+  - model_name: copilot-gemini-2.5-pro
+    litellm_params:
+      model: github_copilot/gemini-2.5-pro
+
+  - model_name: copilot-gemini-3-flash-preview
+    litellm_params:
+      model: github_copilot/gemini-3-flash-preview
+
+  - model_name: copilot-gemini-3-pro-preview
+    litellm_params:
+      model: github_copilot/gemini-3-pro-preview
+
+  # --- xAI (chat) ---
+  - model_name: copilot-grok-code-fast-1
+    litellm_params:
+      model: github_copilot/grok-code-fast-1
+
+  # --- Fine-tuned / Microsoft (chat) ---
+  # Raptor mini: try copilot-raptor-mini first; VS Code logs sometimes show the server id oswe-vscode-prime instead.
+  # - model_name: copilot-raptor-mini
+  #   litellm_params:
+  #     model: github_copilot/raptor-mini
+
+  - model_name: copilot-oswe-vscode-prime
+    litellm_params:
+      model: github_copilot/oswe-vscode-prime
+
+
+
+
+
+
 # ── GENERAL SETTINGS ─────────────────────────────────────────
 general_settings:
   master_key: os.environ/LITELLM_MASTER_KEY
