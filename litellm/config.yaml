@@ -3,7 +3,7 @@
 #    ali-*   →  Alibaba / Qwen Coding Plan
 #    or-*    →  OpenRouter
 #    *:cloud →  Ollama Cloud
-#    cliproxyapi-* →  CLIProxyAPI (Codex OAuth via local proxy)
+#    cpa-openai* →  CLIProxyAPI (Codex OAuth via local proxy)
 #
 # ============================================================
 
