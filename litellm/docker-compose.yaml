@@ -44,7 +44,7 @@ services:
       - "4000:4000"
     environment:
       LITELLM_UPSTREAM_URL: http://litellm:4001
-      CURSOR_SHIM_MODEL_PREFIX: cliproxyapi-
+      CURSOR_SHIM_MODEL_PREFIX: cpa-openai-
     depends_on:
       litellm:
         condition: service_healthy

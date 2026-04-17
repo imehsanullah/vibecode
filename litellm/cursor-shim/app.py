@@ -9,7 +9,7 @@ from starlette.background import BackgroundTask
 
 
 UPSTREAM_BASE_URL = os.getenv("LITELLM_UPSTREAM_URL", "http://litellm:4001")
-MODEL_PREFIX = os.getenv("CURSOR_SHIM_MODEL_PREFIX", "cliproxyapi-")
+MODEL_PREFIX = os.getenv("CURSOR_SHIM_MODEL_PREFIX", "cpa-openai-")
 HOP_BY_HOP_HEADERS = {
     "connection",
     "keep-alive",
