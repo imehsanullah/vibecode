@@ -3,6 +3,7 @@
 #    ali-*   →  Alibaba / Qwen Coding Plan
 #    or-*    →  OpenRouter
 #    *:cloud →  Ollama Cloud
+#    cliproxyapi-* →  CLIProxyAPI (Codex OAuth via local proxy)
 #
 # ============================================================
 
@@ -198,6 +199,33 @@ model_list:
       model: openai/nemotron-3-super-free
       api_base: https://opencode.ai/zen/v1
       api_key: os.environ/OPENCODE_API_KEY
+
+# ── CLIPROXYAPI / CODEX OAUTH ───────────────────────────────
+
+  - model_name: cliproxyapi-gpt-5.4
+    litellm_params:
+      model: openai/gpt-5.4
+      api_base: os.environ/CLIPROXYAPI_BASE_URL
+      api_key: os.environ/CLIPROXYAPI_API_KEY
+
+  - model_name: cliproxyapi-gpt-5.4-mini
+    litellm_params:
+      model: openai/gpt-5.4-mini
+      api_base: os.environ/CLIPROXYAPI_BASE_URL
+      api_key: os.environ/CLIPROXYAPI_API_KEY
+
+  - model_name: cliproxyapi-gpt-5.3-codex
+    litellm_params:
+      model: openai/gpt-5.3-codex
+      api_base: os.environ/CLIPROXYAPI_BASE_URL
+      api_key: os.environ/CLIPROXYAPI_API_KEY
+
+  - model_name: cliproxyapi-gpt-5.2
+    litellm_params:
+      model: openai/gpt-5.2
+      api_base: os.environ/CLIPROXYAPI_BASE_URL
+      api_key: os.environ/CLIPROXYAPI_API_KEY
+
 
 # ── GENERAL SETTINGS ─────────────────────────────────────────
 general_settings:

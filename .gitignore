@@ -1,2 +1,5 @@
 litellm/.env
 .vscode/
+litellm/cliproxyapi/auth/logs
+litellm/cliproxyapi/auth/*.json
+__pycache__/
