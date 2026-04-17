@@ -202,27 +202,79 @@ model_list:
 
 # ── CLIPROXYAPI / CODEX OAUTH ───────────────────────────────
 
-  - model_name: cpa-openai-gpt-5.4
+  # gpt-5.4
+  - model_name: cpa-openai-gpt-5.4(xhigh)
     litellm_params:
-      model: openai/gpt-5.4
+      model: openai/gpt-5.4(xhigh)
       api_base: os.environ/CLIPROXYAPI_BASE_URL
       api_key: os.environ/CLIPROXYAPI_API_KEY
 
-  - model_name: cpa-openai-gpt-5.4-mini
+  - model_name: cpa-openai-gpt-5.4(high)
     litellm_params:
-      model: openai/gpt-5.4-mini
+      model: openai/gpt-5.4(high)
       api_base: os.environ/CLIPROXYAPI_BASE_URL
       api_key: os.environ/CLIPROXYAPI_API_KEY
 
-  - model_name: cpa-openai-gpt-5.3-codex
+  - model_name: cpa-openai-gpt-5.4(medium)
     litellm_params:
-      model: openai/gpt-5.3-codex
+      model: openai/gpt-5.4(medium)
+      api_base: os.environ/CLIPROXYAPI_BASE_URL
+      api_key: os.environ/CLIPROXYAPI_API_KEY
+  
+# gpt-5.4-mini
+  - model_name: cpa-openai-gpt-5.4-mini(xhigh)
+    litellm_params:
+      model: openai/gpt-5.4-mini(xhigh)
       api_base: os.environ/CLIPROXYAPI_BASE_URL
       api_key: os.environ/CLIPROXYAPI_API_KEY
 
-  - model_name: cpa-openai-gpt-5.2
+  - model_name: cpa-openai-gpt-5.4-mini(high)
     litellm_params:
-      model: openai/gpt-5.2
+      model: openai/gpt-5.4-mini(high)
+      api_base: os.environ/CLIPROXYAPI_BASE_URL
+      api_key: os.environ/CLIPROXYAPI_API_KEY
+
+  - model_name: cpa-openai-gpt-5.4-mini(medium)
+    litellm_params:
+      model: openai/gpt-5.4-mini(medium)
+      api_base: os.environ/CLIPROXYAPI_BASE_URL
+      api_key: os.environ/CLIPROXYAPI_API_KEY
+
+ # gpt-5.3-codex
+  - model_name: cpa-openai-gpt-5.3-codex(xhigh)
+    litellm_params:
+      model: openai/gpt-5.3-codex(xhigh)
+      api_base: os.environ/CLIPROXYAPI_BASE_URL
+      api_key: os.environ/CLIPROXYAPI_API_KEY
+
+  - model_name: cpa-openai-gpt-5.3-codex(high)
+    litellm_params:
+      model: openai/gpt-5.3-codex(high)
+      api_base: os.environ/CLIPROXYAPI_BASE_URL
+      api_key: os.environ/CLIPROXYAPI_API_KEY
+
+  - model_name: cpa-openai-gpt-5.3-codex(medium)
+    litellm_params:
+      model: openai/gpt-5.3-codex(medium)
+      api_base: os.environ/CLIPROXYAPI_BASE_URL
+      api_key: os.environ/CLIPROXYAPI_API_KEY
+
+ # gpt-5.2
+  - model_name: cpa-openai-gpt-5.2(xhigh)
+    litellm_params:
+      model: openai/gpt-5.2(xhigh)
+      api_base: os.environ/CLIPROXYAPI_BASE_URL
+      api_key: os.environ/CLIPROXYAPI_API_KEY
+
+  - model_name: cpa-openai-gpt-5.2(high)
+    litellm_params:
+      model: openai/gpt-5.2(high)
+      api_base: os.environ/CLIPROXYAPI_BASE_URL
+      api_key: os.environ/CLIPROXYAPI_API_KEY
+
+  - model_name: cpa-openai-gpt-5.2(medium)
+    litellm_params:
+      model: openai/gpt-5.2(medium)
       api_base: os.environ/CLIPROXYAPI_BASE_URL
       api_key: os.environ/CLIPROXYAPI_API_KEY
 
