@@ -106,7 +106,13 @@ Router.acompletion() missing 1 required positional argument: 'messages'
 
 the request shape does not match the endpoint you called.
 
-For Cursor BYOK with `Override OpenAI Base URL`, this repository now includes a shim that detects Responses-style requests sent to `/chat/completions` for `cliproxyapi-*` models and forwards them to LiteLLM's `/v1/responses` upstream instead of trying to flatten them into Chat Completions.
+For Cursor BYOK with `Override OpenAI Base URL`, this repository now includes a shim that detects Responses-style requests sent to `/chat/completions` for routed model families and forwards them to LiteLLM's `/v1/responses` upstream instead of trying to flatten them into Chat Completions.
+
+The default routed families are:
+
+- `cpa-openai-*`
+- `cliproxyapi-*`
+- `copilot-gpt-5*`
 
 This preserves:
 
