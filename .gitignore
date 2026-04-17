@@ -3,3 +3,4 @@ litellm/.env
 litellm/cliproxyapi/auth/logs
 litellm/cliproxyapi/auth/*.json
 __pycache__/
+litellm/github_copilot
