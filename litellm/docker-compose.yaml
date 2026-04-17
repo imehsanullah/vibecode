@@ -1,15 +1,28 @@
 services:
+  cliproxyapi:
+    image: eceasy/cli-proxy-api:latest
+    container_name: cliproxyapi
+    ports:
+      - "8317:8317"
+      - "1455:1455"
+    volumes:
+      - ./cliproxyapi/config.yaml:/CLIProxyAPI/config.yaml
+      - ./cliproxyapi/auth:/root/.cli-proxy-api
+    restart: unless-stopped
 
   litellm:
     image: ghcr.io/berriai/litellm:main-latest
     container_name: litellm-proxy
-    ports:
-      - "4000:4000"
+    depends_on:
+      - cliproxyapi
+    environment:
+      CLIPROXYAPI_BASE_URL: ${CLIPROXYAPI_BASE_URL:-http://cliproxyapi:8317/v1}
+      CLIPROXYAPI_API_KEY: ${CLIPROXYAPI_API_KEY:-sk-dummy}
     env_file:
       - .env
     volumes:
       - ./config.yaml:/app/config.yaml
-    command: ["--config", "/app/config.yaml", "--port", "4000", "--host", "0.0.0.0"]
+    command: ["--config", "/app/config.yaml", "--port", "4001", "--host", "0.0.0.0"]
     restart: unless-stopped
     healthcheck:
       test:
@@ -17,7 +30,32 @@ services:
           "CMD",
           "python3",
           "-c",
-          "import urllib.request; urllib.request.urlopen('http://127.0.0.1:4000/health/liveliness', timeout=4)",
+          "import urllib.request; urllib.request.urlopen('http://127.0.0.1:4001/health/liveliness', timeout=4)",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  cursor-shim:
+    build:
+      context: ./cursor-shim
+    container_name: litellm-cursor-shim
+    ports:
+      - "4000:4000"
+    environment:
+      LITELLM_UPSTREAM_URL: http://litellm:4001
+      CURSOR_SHIM_MODEL_PREFIX: cpa-openai-
+    depends_on:
+      litellm:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python3",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://127.0.0.1:4000/healthz', timeout=4)",
         ]
       interval: 10s
       timeout: 5s
@@ -26,8 +64,8 @@ services:
   cloudflared:
     image: cloudflare/cloudflared:latest
     container_name: litellm-tunnel
-    command: tunnel --no-autoupdate --url http://litellm:4000
+    command: tunnel --no-autoupdate --url http://cursor-shim:4000
     depends_on:
-      litellm:
+      cursor-shim:
         condition: service_healthy
     restart: unless-stopped
