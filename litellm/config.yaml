@@ -4,7 +4,7 @@
 #    or-*    →  OpenRouter
 #    *:cloud →  Ollama Cloud
 #    cpa-openai* →  CLIProxyAPI (Codex OAuth via local proxy)
-#
+#    copilot-* →  GitHub Copilot 
 # ============================================================
 
 model_list:
@@ -279,7 +279,7 @@ model_list:
       api_key: os.environ/CLIPROXYAPI_API_KEY
 
 
-# ── GITHUB COPILOT (Student plan + docs parity) ───────────────
+# ── GITHUB COPILOT (Student plan) ───────────────
 
   # --- OpenAI (chat) ---
   - model_name: copilot-shim-resp-gpt-4.1
