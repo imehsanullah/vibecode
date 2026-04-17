@@ -18,10 +18,12 @@ services:
     environment:
       CLIPROXYAPI_BASE_URL: ${CLIPROXYAPI_BASE_URL:-http://cliproxyapi:8317/v1}
       CLIPROXYAPI_API_KEY: ${CLIPROXYAPI_API_KEY:-sk-dummy}
+      GITHUB_COPILOT_TOKEN_DIR: /root/.config/litellm/github_copilot
     env_file:
       - .env
     volumes:
       - ./config.yaml:/app/config.yaml
+      - ./github_copilot:/root/.config/litellm/github_copilot
     command: ["--config", "/app/config.yaml", "--port", "4001", "--host", "0.0.0.0"]
     restart: unless-stopped
     healthcheck:
@@ -44,7 +46,8 @@ services:
       - "4000:4000"
     environment:
       LITELLM_UPSTREAM_URL: http://litellm:4001
-      CURSOR_SHIM_MODEL_PREFIX: cpa-openai-
+      CURSOR_SHIM_RESPONSES_MODEL_PREFIXES: cpa-openai-,cliproxyapi-,copilot-shim-resp
+      CURSOR_SHIM_DEBUG_COPILOT_CLAUDE: "true"
     depends_on:
       litellm:
         condition: service_healthy
