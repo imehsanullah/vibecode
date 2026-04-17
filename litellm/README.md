@@ -14,31 +14,16 @@ docker compose logs cloudflared | grep -o 'https://.*\.trycloudflare\.com'
 
 # CLIProxyAPI-backed Codex models
 
-This LiteLLM config now includes:
-
-- `cliproxyapi-gpt-5.4`
-- `cliproxyapi-gpt-5.4-mini`
-- `cliproxyapi-gpt-5.3-codex`
-- `cliproxyapi-gpt-5.2`
-
-Compatibility aliases:
-
-- `cliproxyapi-codex-gpt-5` -> `cliproxyapi-gpt-5.4`
-- `cliproxyapi-codex-gpt-5-codex` -> `cliproxyapi-gpt-5.2-codex`
-
-These route through a local CLIProxyAPI server so LiteLLM can use your Codex OAuth session instead of a direct OpenAI API key.
-
-Expected network path:
 
 `client -> cursor-shim (Docker :4000) -> LiteLLM (Docker :4001) -> CLIProxyAPI service (Docker :8317)`
 
-The compose stack now includes:
+The compose includes:
 
 - `cliproxyapi` for Codex OAuth-backed upstream access
 - `litellm` as the internal gateway on port `4001`
 - `cursor-shim` as the public entrypoint on port `4000`
 
-For `cliproxyapi-*` models, the shim detects Cursor's buggy case where a Responses-style body is posted to `/chat/completions`, and reroutes that request to LiteLLM's `/v1/responses` upstream without flattening the tool protocol. All other requests pass through unchanged.
+For `cpa-*` models, the shim detects Cursor's buggy case where a Responses-style body is posted to `/chat/completions`, and reroutes that request to LiteLLM's `/v1/responses` upstream without flattening the tool protocol. All other requests pass through unchanged.
 
 LiteLLM reaches CLIProxyAPI over the Docker network at:
 
@@ -74,16 +59,6 @@ CLIProxyAPI persists its config and OAuth state under:
 - `./cliproxyapi/config.yaml`
 - `./cliproxyapi/auth/`
 
-## Optional env overrides
-
-If you want to override the defaults, set these in `.env`:
-
-```bash
-CLIPROXYAPI_BASE_URL=http://cliproxyapi:8317/v1
-CLIPROXYAPI_API_KEY=sk-dummy
-```
-
-`docker-compose.yaml` already provides these values as defaults, so you only need to add them if you want something different.
 
 ## Restart services after config changes
 
@@ -100,7 +75,7 @@ curl http://127.0.0.1:4000/v1/chat/completions \
   -H "Authorization: Bearer $LITELLM_MASTER_KEY" \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "cliproxyapi-codex-gpt-5",
+    "model": "cpa-openai-gpt-5.4(medium)",
     "messages": [
       {"role": "user", "content": "Say hello in one sentence."}
     ]
@@ -114,7 +89,7 @@ curl http://127.0.0.1:4000/v1/responses \
   -H "Authorization: Bearer $LITELLM_MASTER_KEY" \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "cliproxyapi-gpt-5.2-codex",
+    "model": "cpa-openai-gpt-5.4(medium)",
     "input": "Return the word ready."
   }'
 ```
