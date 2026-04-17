@@ -1,0 +1,9 @@
+host: ""
+port: 8317
+
+auth-dir: "/root/.cli-proxy-api"
+
+api-keys:
+  - "sk-dummy"
+
+debug: false
