@@ -4,13 +4,30 @@
 docker compose up -d
 ```
 
-# Get your public tunnel URL
+# Cursor on this machine
+
+In Cursor settings, set the OpenAI-compatible override (or use the bash function below):
+
+- Base URL: `http://127.0.0.1:4000/v1` (or `https://<trycloudflare-host>/v1` from `docker compose logs cloudflared`)
+- API key: same value as `LITELLM_MASTER_KEY` in `./.env`
+
+For Cursor chat, prefer these Copilot aliases:
+
+- `copilot-gpt-5.2`
+- `copilot-gpt-4.1`
+- `copilot-gpt4o`
+
+Avoid expecting the `*-codex` aliases to behave reliably in Cursor chat mode. Those are better
+matched to clients that call `/v1/responses`.
+
+# Optional: get your public tunnel URL
 
 ```
 docker compose logs cloudflared | grep -o 'https://.*\.trycloudflare\.com'
 ```
 
-- Using this URL and LITELLM_MASTER_KEY from .env in claude-code and cursor
+- Only use the tunnel for remote clients. If you point Cursor at the tunnel, use `https://.../v1`,
+  not the tunnel root.
 
 I use the following functions in my bashrc
 
@@ -19,7 +36,7 @@ use_litellm_cursor() {
   local DB="$HOME/Library/Application Support/Cursor/User/globalStorage/state.vscdb"
   local JSON_KEY="src.vs.platform.reactivestorage.browser.reactiveStorageServiceImpl.persistentStorage.applicationUser"
   local LITTELM_KEY="..."
-  local LITELLM_DIR="$HOME/vibecode/litellm"
+  local LITELLM_URL="http://127.0.0.1:4000/v1"
 
   pkill -x Cursor || true
   sleep 1
@@ -29,21 +46,6 @@ use_litellm_cursor() {
     sqlite3 "$DB" "UPDATE ItemTable SET value = '' WHERE key = 'cursorAuth/openAIKey';"
     echo "✅ Reset to native Cursor models"
   else
-    :  
-
-    local LITTELM_URL=""
-    local attempt=0
-    while [ "$attempt" -lt 90 ] && [ -z "$LITTELM_URL" ]; do
-      sleep 1
-      LITTELM_URL=$(cd "$LITELLM_DIR" && docker compose logs cloudflared 2>/dev/null | grep -o 'https://.*\.trycloudflare\.com' | tail -1)
-      attempt=$((attempt + 1))
-    done
-
-    if [ -z "$LITTELM_URL" ]; then
-      echo "❌ Could not read trycloudflare URL from cloudflared logs (timed out after ${attempt}s)"
-      return 1
-    fi
-
     echo "🌐 Litellm proxy URL: $LITTELM_URL"
 
     sqlite3 "$DB" "UPDATE ItemTable SET value = json_set(value, '$.openAIBaseUrl', '$LITTELM_URL') WHERE key = '$JSON_KEY';"

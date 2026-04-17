@@ -7,8 +7,12 @@ services:
       - "4000:4000"
     env_file:
       - .env
+    environment:
+      # Must match volume mount — LiteLLM reads access-token + api-key.json here only.
+      GITHUB_COPILOT_TOKEN_DIR: /root/.config/litellm/github_copilot
     volumes:
       - ./config.yaml:/app/config.yaml
+      - ./github_copilot:/root/.config/litellm/github_copilot
     command: ["--config", "/app/config.yaml", "--port", "4000", "--host", "0.0.0.0"]
     restart: unless-stopped
     healthcheck:
@@ -21,7 +25,8 @@ services:
         ]
       interval: 10s
       timeout: 5s
-      retries: 5
+      retries: 8
+      start_period: 45s
 
   cloudflared:
     image: cloudflare/cloudflared:latest
