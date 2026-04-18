@@ -12,7 +12,8 @@ include:
   - configs/openrouter.yaml
   - configs/ollama-cloud.yaml
   - configs/opencode.yaml
-  - configs/cliproxyapi.yaml
+  - configs/cliproxyapi-openai.yaml
+  - configs/cliproxyapi-antigravity.yaml
   - configs/github-copilot.yaml
 
 general_settings:
