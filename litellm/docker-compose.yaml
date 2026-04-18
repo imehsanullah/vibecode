@@ -23,6 +23,7 @@ services:
       - .env
     volumes:
       - ./config.yaml:/app/config.yaml
+      - ./configs:/app/configs:ro
       - ./github_copilot:/root/.config/litellm/github_copilot
     command: ["--config", "/app/config.yaml", "--port", "4001", "--host", "0.0.0.0"]
     restart: unless-stopped

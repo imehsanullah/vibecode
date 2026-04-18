@@ -1,0 +1,31 @@
+model_list:
+  # ── OLLAMA CLOUD ────────────────────────────────────────────
+  - model_name: glm-5.1:cloud
+    litellm_params:
+      model: openai/glm-5.1:cloud
+      api_base: https://ollama.com/v1
+      api_key: os.environ/OLLAMA_CLOUD_API_KEY
+
+  - model_name: minimax-m2.7:cloud
+    litellm_params:
+      model: openai/minimax-m2.7:cloud
+      api_base: https://ollama.com/v1
+      api_key: os.environ/OLLAMA_CLOUD_API_KEY
+
+  - model_name: gemma4:31b-cloud
+    litellm_params:
+      model: openai/gemma4:31b-cloud
+      api_base: https://ollama.com/v1
+      api_key: os.environ/OLLAMA_CLOUD_API_KEY
+
+  - model_name: qwen3.5:397b-cloud
+    litellm_params:
+      model: openai/gqwen3.5:397b-cloud
+      api_base: https://ollama.com/v1
+      api_key: os.environ/OLLAMA_CLOUD_API_KEY
+
+  - model_name: kimi-k2.5:cloud
+    litellm_params:
+      model: openai/kimi-k2.5:cloud
+      api_base: https://ollama.com/v1
+      api_key: os.environ/OLLAMA_CLOUD_API_KEY
