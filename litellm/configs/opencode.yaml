@@ -1,0 +1,19 @@
+model_list:
+  # ── OPENCODE ────────────────────────────────────────────────
+  - model_name: opencode-minimax-m2.5-free
+    litellm_params:
+      model: openai/minimax-m2.5-free
+      api_base: https://opencode.ai/zen/v1
+      api_key: os.environ/OPENCODE_API_KEY
+
+  - model_name: opencode-big-pickle
+    litellm_params:
+      model: openai/big-pickle
+      api_base: https://opencode.ai/zen/v1
+      api_key: os.environ/OPENCODE_API_KEY
+
+  - model_name: opencode-nemotron-3-super-free
+    litellm_params:
+      model: openai/nemotron-3-super-free
+      api_base: https://opencode.ai/zen/v1
+      api_key: os.environ/OPENCODE_API_KEY
