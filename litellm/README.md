@@ -12,7 +12,7 @@ docker compose logs cloudflared | grep -o 'https://.*\.trycloudflare\.com'
 
 - Using this URL and LITELLM_MASTER_KEY from .env in claude-code and cursor
 
-# CLIProxyAPI-backed Codex models
+# CLIProxyAPI-backed Codex/Antigravity models
 
 
 `client -> cursor-shim (Docker :4000) -> LiteLLM (Docker :4001) -> CLIProxyAPI service (Docker :8317)`
@@ -25,150 +25,20 @@ The compose includes:
 
 For `cpa-*` models, the shim detects Cursor's buggy case where a Responses-style body is posted to `/chat/completions`, and reroutes that request to LiteLLM's `/v1/responses` upstream without flattening the tool protocol. All other requests pass through unchanged.
 
-LiteLLM reaches CLIProxyAPI over the Docker network at:
 
-`http://cliproxyapi:8317/v1`
-
-## Start CLIProxyAPI
-
-Start the whole stack:
-
-```bash
-docker compose up -d
-```
 
 Then authenticate Codex OAuth against the running `cliproxyapi` container:
-
-```bash
-docker compose exec cliproxyapi /CLIProxyAPI/CLIProxyAPI --codex-login
-```
-
-If you need a URL printed in the terminal instead of opening a browser:
 
 ```bash
 docker compose exec cliproxyapi /CLIProxyAPI/CLIProxyAPI --codex-login --no-browser
 ```
 
-The compose file publishes:
-
-- `8317:8317` for the CLIProxyAPI server
-- `1455:1455` for the Codex OAuth callback
-
-CLIProxyAPI persists its config and OAuth state under:
-
-- `./cliproxyapi/config.yaml`
-- `./cliproxyapi/auth/`
-
-
-## Restart services after config changes
-
 ```bash
-docker compose up -d --build --force-recreate cliproxyapi litellm cursor-shim
+docker compose exec cliproxyapi /CLIProxyAPI/CLIProxyAPI --antigravity-login --no-browser
 ```
 
-## Test through LiteLLM
-
-Chat Completions:
-
-```bash
-curl http://127.0.0.1:4000/v1/chat/completions \
-  -H "Authorization: Bearer $LITELLM_MASTER_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "model": "cpa-openai-gpt-5.4(medium)",
-    "messages": [
-      {"role": "user", "content": "Say hello in one sentence."}
-    ]
-  }'
-```
-
-Responses API:
-
-```bash
-curl http://127.0.0.1:4000/v1/responses \
-  -H "Authorization: Bearer $LITELLM_MASTER_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "model": "cpa-openai-gpt-5.4(medium)",
-    "input": "Return the word ready."
-  }'
-```
-
-CLIProxyAPI documents Codex as an OpenAI-compatible `responses` provider, and LiteLLM supports both `/v1/chat/completions` and `/v1/responses`, so either endpoint can be exposed via LiteLLM depending on the client.
-
-## Troubleshooting
-
-If you see this LiteLLM error:
-
-```text
-Router.acompletion() missing 1 required positional argument: 'messages'
-```
-
-the request shape does not match the endpoint you called.
-
-For Cursor BYOK with `Override OpenAI Base URL`, this repository now includes a shim that detects Responses-style requests sent to `/chat/completions` for routed model families and forwards them to LiteLLM's `/v1/responses` upstream instead of trying to flatten them into Chat Completions.
-
-The default routed families are:
-
-- `cpa-openai-*`
-- `cliproxyapi-*`
-- `copilot-gpt-5*`
-
-This preserves:
-
-- `input`
-- `previous_response_id`
-- Responses-style tool definitions
-- Responses-style output items / tool-loop state
-- reasoning and structured-output fields
-
-For Cursor compatibility, the shim then translates the upstream Responses result back into Chat Completions format before returning it on the original `/chat/completions` route.
-
-For CLIProxyAPI specifically, the shim also strips optional fields that its `/v1/responses` implementation currently rejects. At the moment this includes:
-
-- `metadata`
-
-Use these pairings when you test outside Cursor:
-
-- `/v1/chat/completions` with a `messages` array
-- `/v1/responses` with an `input` field
-
-Examples:
-
-```bash
-curl http://127.0.0.1:4000/v1/chat/completions \
-  -H "Authorization: Bearer $LITELLM_MASTER_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "model": "cliproxyapi-gpt-5.4",
-    "messages": [
-      {"role": "user", "content": "Say hello in one sentence."}
-    ]
-  }'
-```
-
-```bash
-curl http://127.0.0.1:4000/v1/responses \
-  -H "Authorization: Bearer $LITELLM_MASTER_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "model": "cliproxyapi-gpt-5.4",
-    "input": "Say hello in one sentence."
-  }'
-```
-
-If you are using Codex itself against LiteLLM, configure Codex to use the Responses API surface, not Chat Completions:
-
-```toml
-model_provider = "litellm"
-model = "cliproxyapi-gpt-5.4"
-
-[model_providers.litellm]
-name = "litellm"
-base_url = "http://127.0.0.1:4000/v1"
-wire_api = "responses"
-env_key = "OPENAI_API_KEY"
-```
+## Notes for CLIProxyAPI Gemini CLI
+- I was not able to make the gemini cli via CLIProxyAPI work.
 
 I use the following functions in my bashrc
 
