@@ -13,7 +13,6 @@ include:
   - configs/ollama-cloud.yaml
   - configs/opencode.yaml
   - configs/cliproxyapi-openai.yaml
-  - configs/cliproxyapi-antigravity.yaml
   - configs/github-copilot.yaml
 
 general_settings:
