@@ -33,12 +33,9 @@ Then authenticate Codex OAuth against the running `cliproxyapi` container:
 docker compose exec cliproxyapi /CLIProxyAPI/CLIProxyAPI --codex-login --no-browser
 ```
 
-```bash
-docker compose exec cliproxyapi /CLIProxyAPI/CLIProxyAPI --antigravity-login --no-browser
-```
 
-## Notes for CLIProxyAPI Gemini CLI
-- I was not able to make the gemini cli via CLIProxyAPI work.
+## Notes for CLIProxyAPI Gemini CLI + Antigravity
+- I was not able to make the gemini cli via CLIProxyAPI work. And account gets banned for terms voilation for using antigravity via this.
 
 I use the following functions in my bashrc
 
