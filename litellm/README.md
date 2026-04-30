@@ -23,7 +23,7 @@ The compose includes:
 - `litellm` as the internal gateway on port `4001`
 - `cursor-shim` as the public entrypoint on port `4000`
 
-For `cpa-*` models, the shim detects Cursor's buggy case where a Responses-style body is posted to `/chat/completions`, and reroutes that request to LiteLLM's `/v1/responses` upstream without flattening the tool protocol. All other requests pass through unchanged.
+For `cpa-*` models, the shim reroutes to LiteLLM's `/v1/responses` when Cursor sends a Responses-shaped request. CLIProxyAPI/Codex can stream Cursor editor actions as Responses `custom_tool_call` events; the shim converts those back into Chat Completions `tool_calls` for Cursor to execute.
 
 
 

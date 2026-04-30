@@ -278,14 +278,14 @@ def _extract_chat_message_from_response(payload: dict) -> tuple[str | None, list
                 if part.get("type") == "output_text" and isinstance(part.get("text"), str):
                     text_parts.append(part["text"])
 
-        elif item_type == "function_call":
+        elif item_type in {"function_call", "custom_tool_call"}:
             tool_calls.append(
                 {
                     "id": item.get("call_id") or item.get("id") or f"call_{len(tool_calls)}",
                     "type": "function",
                     "function": {
                         "name": item.get("name", "tool"),
-                        "arguments": item.get("arguments", ""),
+                        "arguments": item.get("arguments") or item.get("input") or "",
                     },
                 }
             )
@@ -395,7 +395,7 @@ async def _translate_responses_sse_to_chat_chunks(upstream_response: httpx.Respo
                         ],
                     }
                 )
-            elif item_type == "function_call":
+            elif item_type in {"function_call", "custom_tool_call"}:
                 item_id = item.get("id")
                 if item_id:
                     tool_index = len(tool_call_state)
@@ -403,6 +403,7 @@ async def _translate_responses_sse_to_chat_chunks(upstream_response: httpx.Respo
                         "index": tool_index,
                         "id": item.get("call_id") or item_id,
                         "name": item.get("name", "tool"),
+                        "arg_bytes": 0,
                     }
                     saw_tool_call = True
                     yield _encode_sse_event(
@@ -480,6 +481,70 @@ async def _translate_responses_sse_to_chat_chunks(upstream_response: httpx.Respo
                         ],
                     }
                 )
+            continue
+
+        if event_type == "response.custom_tool_call_input.delta":
+            item_id = event.get("item_id")
+            state = tool_call_state.get(item_id)
+            if state:
+                yield _encode_sse_event(
+                    {
+                        "id": response_id or f"chatcmpl-{int(time.time() * 1000)}",
+                        "object": "chat.completion.chunk",
+                        "created": created or int(time.time()),
+                        "model": model,
+                        "choices": [
+                            {
+                                "index": 0,
+                                "delta": {
+                                    "tool_calls": [
+                                        {
+                                            "index": state["index"],
+                                            "function": {
+                                                "arguments": event.get("delta", ""),
+                                            },
+                                        }
+                                    ]
+                                },
+                                "finish_reason": None,
+                            }
+                        ],
+                    }
+                )
+                state["arg_bytes"] = state.get("arg_bytes", 0) + len(event.get("delta", ""))
+            continue
+
+        if event_type == "response.output_item.done" and isinstance(event.get("item"), dict):
+            item = event["item"]
+            if item.get("type") == "custom_tool_call":
+                item_id = item.get("id")
+                state = tool_call_state.get(item_id)
+                full_args = item.get("input", "")
+                if state and isinstance(full_args, str) and full_args and state.get("arg_bytes", 0) == 0:
+                    yield _encode_sse_event(
+                        {
+                            "id": response_id or f"chatcmpl-{int(time.time() * 1000)}",
+                            "object": "chat.completion.chunk",
+                            "created": created or int(time.time()),
+                            "model": model,
+                            "choices": [
+                                {
+                                    "index": 0,
+                                    "delta": {
+                                        "tool_calls": [
+                                            {
+                                                "index": state["index"],
+                                                "function": {
+                                                    "arguments": full_args,
+                                                },
+                                            }
+                                        ]
+                                    },
+                                    "finish_reason": None,
+                                }
+                            ],
+                        }
+                    )
             continue
 
         if event_type == "response.completed" and isinstance(event.get("response"), dict):
