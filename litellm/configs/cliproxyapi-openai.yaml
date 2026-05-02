@@ -76,6 +76,25 @@ model_list:
       api_base: os.environ/CLIPROXYAPI_BASE_URL
       api_key: os.environ/CLIPROXYAPI_API_KEY
 
+  # gpt-5.3-codex-spark
+  - model_name: cpa-openai-gpt-5.3-codex-spark(xhigh)
+    litellm_params:
+      model: openai/gpt-5.3-codex-spark(xhigh)
+      api_base: os.environ/CLIPROXYAPI_BASE_URL
+      api_key: os.environ/CLIPROXYAPI_API_KEY
+
+  - model_name: cpa-openai-gpt-5.3-codex-spark(high)
+    litellm_params:
+      model: openai/gpt-5.3-codex-spark(high)
+      api_base: os.environ/CLIPROXYAPI_BASE_URL
+      api_key: os.environ/CLIPROXYAPI_API_KEY
+
+  - model_name: cpa-openai-gpt-5.3-codex-spark(medium)
+    litellm_params:
+      model: openai/gpt-5.3-codex-spark(medium)
+      api_base: os.environ/CLIPROXYAPI_BASE_URL
+      api_key: os.environ/CLIPROXYAPI_API_KEY
+
   # gpt-5.2
   - model_name: cpa-openai-gpt-5.2(xhigh)
     litellm_params:
