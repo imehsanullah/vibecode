@@ -7,3 +7,63 @@ api-keys:
   - "sk-dummy"
 
 debug: false
+
+oauth-model-alias:
+  codex:
+    - name: "gpt-5.5"
+      alias: "gpt-5.5-xhigh-fast"
+      fork: true
+    - name: "gpt-5.5"
+      alias: "gpt-5.5-high-fast"
+      fork: true
+    - name: "gpt-5.4"
+      alias: "gpt-5.4-xhigh-fast"
+      fork: true
+    - name: "gpt-5.4"
+      alias: "gpt-5.4-high-fast"
+      fork: true
+    - name: "gpt-5.3-codex"
+      alias: "gpt-5.3-codex-xhigh-fast"
+      fork: true
+    - name: "gpt-5.3-codex"
+      alias: "gpt-5.3-codex-high-fast"
+      fork: true
+
+payload:
+  override:
+    - models:
+        - name: "gpt-5.5-xhigh-fast"
+          protocol: "codex"
+      params:
+        service_tier: "priority"
+        reasoning.effort: "xhigh"
+    - models:
+        - name: "gpt-5.5-high-fast"
+          protocol: "codex"
+      params:
+        service_tier: "priority"
+        reasoning.effort: "high"
+    - models:
+        - name: "gpt-5.4-xhigh-fast"
+          protocol: "codex"
+      params:
+        service_tier: "priority"
+        reasoning.effort: "xhigh"
+    - models:
+        - name: "gpt-5.4-high-fast"
+          protocol: "codex"
+      params:
+        service_tier: "priority"
+        reasoning.effort: "high"
+    - models:
+        - name: "gpt-5.3-codex-xhigh-fast"
+          protocol: "codex"
+      params:
+        service_tier: "priority"
+        reasoning.effort: "xhigh"
+    - models:
+        - name: "gpt-5.3-codex-high-fast"
+          protocol: "codex"
+      params:
+        service_tier: "priority"
+        reasoning.effort: "high"
