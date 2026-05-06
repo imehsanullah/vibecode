@@ -39,37 +39,37 @@ services:
       timeout: 5s
       retries: 5
 
-  cursor-shim:
-    build:
-      context: ./cursor-shim
-    container_name: litellm-cursor-shim
-    ports:
-      - "4000:4000"
-    environment:
-      LITELLM_UPSTREAM_URL: http://litellm:4001
-      CURSOR_SHIM_RESPONSES_MODEL_PREFIXES: cpa-openai-,cliproxyapi-,copilot-shim-resp
-      CURSOR_SHIM_DEBUG_COPILOT_CLAUDE: "true"
-    depends_on:
-      litellm:
-        condition: service_healthy
-    restart: unless-stopped
-    healthcheck:
-      test:
-        [
-          "CMD",
-          "python3",
-          "-c",
-          "import urllib.request; urllib.request.urlopen('http://127.0.0.1:4000/healthz', timeout=4)",
-        ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+  # cursor-shim:
+  #   build:
+  #     context: ./cursor-shim
+  #   container_name: litellm-cursor-shim
+  #   ports:
+  #     - "4000:4000"
+  #   environment:
+  #     LITELLM_UPSTREAM_URL: http://litellm:4001
+  #     CURSOR_SHIM_RESPONSES_MODEL_PREFIXES: cpa-openai-,cliproxyapi-,copilot-shim-resp
+  #     CURSOR_SHIM_DEBUG_COPILOT_CLAUDE: "true"
+  #   depends_on:
+  #     litellm:
+  #       condition: service_healthy
+  #   restart: unless-stopped
+  #   healthcheck:
+  #     test:
+  #       [
+  #         "CMD",
+  #         "python3",
+  #         "-c",
+  #         "import urllib.request; urllib.request.urlopen('http://127.0.0.1:4000/healthz', timeout=4)",
+  #       ]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
 
   cloudflared:
     image: cloudflare/cloudflared:latest
     container_name: litellm-tunnel
-    command: tunnel --no-autoupdate --url http://cursor-shim:4000
-    depends_on:
-      cursor-shim:
-        condition: service_healthy
+    command: tunnel --no-autoupdate --url http://litellm:4001
+    # depends_on:
+    #   cursor-shim:
+    #     condition: service_healthy
     restart: unless-stopped
